@@ -20,7 +20,7 @@ import {
   FiArrowUpRight,
   FiCheck
 } from 'react-icons/fi';
-
+import ServiceCard from './ServiceCard';
 const fadeUp = {
   hidden: { opacity: 0, y: 14, filter: 'blur(6px)' },
   show: (i = 0) => ({
@@ -60,122 +60,6 @@ function SectionBadge({ children }) {
       />
       {children}
     </div>
-  );
-}
-
-function ServiceCard({ service, featured = false }) {
-  const onMove = (e) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - r.left;
-    const y = e.clientY - r.top;
-    e.currentTarget.style.setProperty('--mx', `${x}px`);
-    e.currentTarget.style.setProperty('--my', `${y}px`);
-  };
-
-  const Icon = service.icon;
-
-  return (
-    <motion.article
-      onMouseMove={onMove}
-      whileHover={{ y: -3 }}
-      whileTap={{ scale: 0.99 }}
-      transition={{ type: 'spring', stiffness: 240, damping: 18 }}
-      className={[
-        'group relative overflow-hidden rounded-[28px] p-5 sm:p-6',
-        'border border-black/10 bg-white/70 backdrop-blur-xl',
-        'shadow-[0_18px_60px_rgba(0,0,0,0.10)]',
-        featured ? 'lg:col-span-2' : ''
-      ].join(' ')}
-      style={{
-        WebkitBackdropFilter: 'blur(22px)',
-        background:
-          'linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,255,255,0.62))'
-      }}
-    >
-      {/* spotlight hover */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        style={{
-          background:
-            'radial-gradient(600px circle at var(--mx) var(--my), rgba(193,255,114,0.24), rgba(255,246,239,0.16), rgba(255,255,255,0) 55%)'
-        }}
-      />
-
-      {/* top row */}
-      <div className="relative flex items-start justify-between gap-3">
-        <div className="flex items-start gap-3">
-          <div
-            className="inline-flex h-11 w-11 items-center justify-center rounded-2xl"
-            style={{
-              background: 'rgba(193,255,114,0.30)',
-              border: '1px solid rgba(0,0,0,0.10)'
-            }}
-          >
-            <Icon
-              className="text-[18px]"
-              style={{ color: 'rgba(0,0,0,0.80)' }}
-            />
-          </div>
-
-          <div>
-            <div className="font-display text-[16px] sm:text-[18px] font-extrabold text-sl-negro">
-              {service.title}
-            </div>
-            <div className="mt-1 text-[13px] sm:text-[14px] text-black/65 font-semibold max-w-[42ch]">
-              {service.subtitle}
-            </div>
-          </div>
-        </div>
-
-        <div
-          className="hidden sm:inline-flex rounded-full px-3 py-1 text-[12px] font-extrabold"
-          style={{
-            background: 'rgba(0,0,0,0.06)',
-            border: '1px solid rgba(0,0,0,0.10)',
-            color: 'rgba(0,0,0,0.65)'
-          }}
-        >
-          {service.tag}
-        </div>
-      </div>
-
-      {/* bullets */}
-      <div className="relative mt-5 grid gap-2">
-        {service.bullets.map((b) => (
-          <div key={b} className="flex items-start gap-2">
-            <span
-              className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-xl"
-              style={{
-                background: 'rgba(255,246,239,0.70)',
-                border: '1px solid rgba(0,0,0,0.10)'
-              }}
-            >
-              <FiCheck
-                className="text-[14px]"
-                style={{ color: 'rgba(0,0,0,0.75)' }}
-              />
-            </span>
-            <p className="text-[13px] text-black/70 font-semibold leading-snug">
-              {b}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* bottom hint */}
-      <div className="relative mt-5 flex items-center justify-between">
-        <div className="text-[12px] font-extrabold text-black/55">
-          {service.outcome}
-        </div>
-
-        <div
-          className="h-9 w-9 rounded-2xl flex items-center justify-center border border-black/10 bg-white/70"
-          aria-hidden="true"
-        >
-          <FiArrowUpRight className="text-[18px] text-black/60 group-hover:text-black transition-colors" />
-        </div>
-      </div>
-    </motion.article>
   );
 }
 
