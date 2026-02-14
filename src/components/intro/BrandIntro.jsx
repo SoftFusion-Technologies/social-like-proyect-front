@@ -204,18 +204,27 @@ export default function BrandIntro({
           {/* Fondo limpio (sin halo). Opcional: grilla muy sutil para textura */}
 
           <div className="relative h-full w-full flex items-center justify-center px-6">
-            <div className="w-full max-w-5xl text-center select-none">
+            <div className="w-full max-w-[18rem] sm:max-w-xl lg:max-w-5xl text-center select-none">
+              {' '}
               <AnimatePresence mode="wait">
                 {phase === 'claim' ? (
                   <motion.h1
                     key="claim"
                     {...claimWrap}
-                    className="font-display tracking-tight leading-[1.05]
-                               text-[color:var(--intro-ink)]
-                               text-5xl sm:text-5xl lg:text-6xl"
                     variants={containerVariants}
                     initial="hidden"
                     animate="show"
+                    className="
+    font-display tracking-tight text-[color:var(--intro-ink)] select-none
+    leading-[1.06] sm:leading-[1.05]
+    px-1
+  "
+                    style={{
+                      // tamaño fluido: nunca se va al carajo en mobile, y escala bien en desktop
+                      fontSize: 'clamp(28px, 6.2vw, 64px)',
+                      // mejora la distribución de líneas si hay wrap
+                      textWrap: 'balance'
+                    }}
                   >
                     {letters.map((ch, idx) => {
                       const isSpace = ch === ' ';
@@ -224,7 +233,9 @@ export default function BrandIntro({
                           key={`lt-${idx}`}
                           variants={letterVariants}
                           className={
-                            isSpace ? 'inline-block w-[0.35em]' : 'inline-block'
+                            isSpace
+                              ? 'inline-block w-[0.28em] sm:w-[0.33em]'
+                              : 'inline-block'
                           }
                         >
                           {isSpace ? '\u00A0' : ch}

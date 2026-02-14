@@ -9,10 +9,11 @@
  * y micro-animaciones con Framer Motion. Copys orientados a conversión y métricas con count-up.
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiArrowUpRight, FiPlay, FiCheck } from 'react-icons/fi';
 import RotatingSelectableWord from '../../ui/RotatingSelectableWord';
+import ResultsPanelMotion from '../../ui/ResultsPanelMotion';
 const fadeUp = {
   hidden: { opacity: 0, y: 14, filter: 'blur(6px)' },
   show: (i = 0) => ({
@@ -26,6 +27,26 @@ const fadeUp = {
 const floaty = {
   hidden: { opacity: 0, scale: 0.92 },
   show: { opacity: 1, scale: 1, transition: { duration: 0.7, ease: 'easeOut' } }
+};
+
+/* Benjamin Orellana - 14/02/2026 - Animación stagger en métricas + card "Próximo Paso" con barra de progreso */
+
+const fadeItem = {
+  hidden: { opacity: 0, y: 10, filter: 'blur(6px)' },
+  show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.35, ease: 'easeOut' } }
+};
+
+const staggerWrap = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } }
+};
+
+const progressBar = {
+  hidden: { width: '0%' },
+  show: {
+    width: '72%',
+    transition: { duration: 0.95, ease: 'easeOut', delay: 0.18 }
+  }
 };
 
 function AuroraBackground() {
@@ -149,30 +170,6 @@ function OrbitalKinetics() {
   );
 }
 
-function ValueChip({ children }) {
-  return (
-    <div
-      className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[12px] font-bold"
-      style={{
-        background: 'rgba(255,255,255,0.70)',
-        border: '1px solid rgba(0,0,0,0.08)',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.06)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)'
-      }}
-    >
-      <span
-        className="h-2 w-2 rounded-full"
-        style={{
-          background: 'var(--color-sl-lima)',
-          boxShadow: '0 0 10px rgba(193,255,114,0.85)'
-        }}
-      />
-      <span className="text-black/70">{children}</span>
-    </div>
-  );
-}
-
 function useCountUp({ from = 0, to = 100, duration = 900, start = true }) {
   const [val, setVal] = useState(from);
 
@@ -238,14 +235,6 @@ function MetricCard({
 }
 
 export default function Hero() {
-  const chips = useMemo(
-    () => [
-      'Estrategia de Contenido',
-      'Análisis y Reportes',
-      'Campañas que Convierten'
-    ],
-    []
-  );
 
   const bullets = useMemo(
     () => [
@@ -318,15 +307,7 @@ export default function Hero() {
               viewport={{ once: true, amount: 0.35 }}
               className="flex flex-col gap-6"
             >
-              <motion.div
-                custom={0}
-                variants={fadeUp}
-                className="flex flex-wrap items-center gap-2"
-              >
-                {chips.map((c) => (
-                  <ValueChip key={c}>{c}</ValueChip>
-                ))}
-              </motion.div>
+
               <motion.h1
                 custom={1}
                 variants={fadeUp}
@@ -335,12 +316,7 @@ export default function Hero() {
                 Hacé que tu Negocio se vea{' '}
                 <RotatingSelectableWord
                   startDelayMs={1000}
-                  words={[
-                    'Profesional',
-                    'Moderno',
-                    'Confiable',
-                    'Memorable',
-                  ]} // o 3 palabras si preferís
+                  words={['Profesional', 'Moderno', 'Confiable', 'Memorable']} // o 3 palabras si preferís
                   selectMs={820}
                   deselectMs={760}
                   swapMs={260}
@@ -350,8 +326,8 @@ export default function Hero() {
                   inkColorSelected="var(--color-sl-negro)"
                   baseGradient="linear-gradient(90deg, var(--color-sl-lima), var(--color-sl-lima))"
                   className="font-extrabold"
-                />
-                {' '} y transforme visitas en{' '}
+                />{' '}
+                y transforme visitas en{' '}
                 <span className="underline decoration-black/15 underline-offset-4">
                   Clientes.
                 </span>
@@ -368,6 +344,7 @@ export default function Hero() {
                 mes.
               </motion.p>
 
+              
               <motion.div
                 custom={3}
                 variants={fadeUp}
@@ -484,86 +461,187 @@ export default function Hero() {
                   }}
                 />
 
-                <div
-                  className="relative rounded-[34px] p-5 sm:p-6"
-                  style={{
-                    background: 'rgba(255,255,255,0.75)',
-                    border: '1px solid rgba(0,0,0,0.10)',
-                    boxShadow:
-                      '0 20px 60px rgba(0,0,0,0.12), inset 0 0 0 1px rgba(255,255,255,0.35)',
-                    backdropFilter: 'blur(22px)',
-                    WebkitBackdropFilter: 'blur(22px)'
-                  }}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <div className="text-[12px] font-extrabold text-black/55">
-                        Panel de Resultados
+                <ResultsPanelMotion>
+                  <div
+                    className="relative rounded-[34px] p-5 sm:p-6"
+                    style={{
+                      background: 'rgba(255,255,255,0.75)',
+                      border: '1px solid rgba(0,0,0,0.10)',
+                      boxShadow:
+                        '0 20px 60px rgba(0,0,0,0.12), inset 0 0 0 1px rgba(255,255,255,0.35)',
+                      backdropFilter: 'blur(22px)',
+                      WebkitBackdropFilter: 'blur(22px)'
+                    }}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <div className="text-[12px] font-extrabold text-black/55">
+                          Panel de Resultados
+                        </div>
+                        <div className="font-display text-[18px] font-extrabold text-sl-negro">
+                          Crecimiento en Acción
+                        </div>
                       </div>
-                      <div className="font-display text-[18px] font-extrabold text-sl-negro">
-                        Crecimiento en Acción
-                      </div>
+
+                      <motion.div
+                        className="rounded-2xl px-3 py-2 text-[12px] font-extrabold"
+                        style={{
+                          background: 'rgba(193,255,114,0.40)',
+                          border: '1px solid rgba(0,0,0,0.10)'
+                        }}
+                        animate={{
+                          boxShadow: [
+                            '0 0 0 0 rgba(193,255,114,0.0)',
+                            '0 0 0 10px rgba(193,255,114,0.22)',
+                            '0 0 0 0 rgba(193,255,114,0.0)'
+                          ]
+                        }}
+                        transition={{
+                          duration: 2.6,
+                          repeat: Infinity,
+                          ease: 'easeInOut'
+                        }}
+                      >
+                        Más Clientes
+                      </motion.div>
                     </div>
 
-                    <div
-                      className="rounded-2xl px-3 py-2 text-[12px] font-extrabold"
-                      style={{
-                        background: 'rgba(193,255,114,0.40)',
-                        border: '1px solid rgba(0,0,0,0.10)'
-                      }}
+                    {/* ===== Métricas (stagger) ===== */}
+                    <motion.div
+                      className="mt-5 grid grid-cols-2 gap-3"
+                      variants={staggerWrap}
+                      initial="hidden"
+                      whileInView="show"
+                      viewport={{ once: true, amount: 0.35 }}
                     >
-                      Más Clientes{' '}
-                    </div>
-                  </div>
+                      <motion.div variants={fadeItem}>
+                        <MetricCard
+                          title="Alcance"
+                          type="number"
+                          to={38}
+                          suffix="%"
+                          sub="Últimos 14 Días"
+                        />
+                      </motion.div>
 
-                  <div className="mt-5 grid grid-cols-2 gap-3">
-                    <MetricCard
-                      title="Alcance"
-                      type="number"
-                      to={38}
-                      suffix="%"
-                      sub="Últimos 14 Días"
-                    />
-                    <MetricCard
-                      title="Interacción"
-                      type="number"
-                      to={22}
-                      suffix="%"
-                      sub="Mejor Calidad de Leads"
-                    />
-                    <MetricCard
-                      title="Contenido"
-                      type="number"
-                      to={12}
-                      suffix=""
-                      sub="Piezas / Mes"
-                    />
-                    <MetricCard
-                      title="Campañas"
-                      type="text"
-                      valueText="Activas"
-                      sub="Optimización"
-                    />
-                  </div>
+                      <motion.div variants={fadeItem}>
+                        <MetricCard
+                          title="Interacción"
+                          type="number"
+                          to={22}
+                          suffix="%"
+                          sub="Mejor Calidad de Leads"
+                        />
+                      </motion.div>
 
-                  <div className="mt-5 rounded-3xl p-4 border border-black/10 bg-white/70">
-                    <div className="flex items-center justify-between">
-                      <div className="text-[12px] font-extrabold text-black/60">
-                        Próximo Paso
+                      <motion.div variants={fadeItem}>
+                        <MetricCard
+                          title="Contenido"
+                          type="number"
+                          to={12}
+                          suffix=""
+                          sub="Piezas / Mes"
+                        />
+                      </motion.div>
+
+                      <motion.div variants={fadeItem}>
+                        <MetricCard
+                          title="Campañas"
+                          type="text"
+                          valueText="Activas"
+                          sub="Optimización"
+                        />
+                      </motion.div>
+                    </motion.div>
+
+                    {/* ===== Próximo Paso (card + progress) ===== */}
+                    <motion.div
+                      className="mt-5 rounded-3xl p-4 border border-black/10 bg-white/70 relative overflow-hidden"
+                      initial={{ opacity: 0, y: 12, filter: 'blur(8px)' }}
+                      whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                      viewport={{ once: true, amount: 0.35 }}
+                      transition={{ duration: 0.45, ease: 'easeOut' }}
+                    >
+                      {/* Shine sutil */}
+                      <motion.div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -inset-10 opacity-0"
+                        style={{
+                          background:
+                            'radial-gradient(520px circle at 20% 20%, rgba(193,255,114,0.18), transparent 55%), radial-gradient(680px circle at 70% 80%, rgba(0,0,0,0.06), transparent 60%)'
+                        }}
+                        whileHover={{ opacity: 1 }}
+                        transition={{ duration: 0.25, ease: 'easeOut' }}
+                      />
+
+                      <div className="flex items-center justify-between">
+                        <div className="text-[12px] font-extrabold text-black/60">
+                          Próximo Paso
+                        </div>
+                        <div className="text-[12px] font-extrabold text-black/60">
+                          24–48h
+                        </div>
                       </div>
-                      <div className="text-[12px] font-extrabold text-black/60">
-                        24–48h
+
+                      <div className="mt-1 font-display text-[16px] font-extrabold text-sl-negro">
+                        Auditoría + Propuesta
                       </div>
-                    </div>
-                    <div className="mt-1 font-display text-[16px] font-extrabold text-sl-negro">
-                      Auditoría + Propuesta
-                    </div>
-                    <p className="mt-1 text-[13px] text-black/65 font-semibold">
-                      Te devolvemos un plan claro: qué mejorar, qué publicar y
-                      cómo escalar con anuncios para generar más consultas.
-                    </p>
+
+                      <p className="mt-1 text-[13px] text-black/65 font-semibold">
+                        Te devolvemos un plan claro: qué mejorar, qué publicar y
+                        cómo escalar con anuncios para generar más consultas.
+                      </p>
+
+                      {/* Barra de progreso */}
+                      <div className="mt-3">
+                        <div className="flex items-center justify-between">
+                          <div className="text-[11px] font-extrabold text-black/50">
+                            Estado
+                          </div>
+                          <div className="text-[11px] font-extrabold text-black/50">
+                            En curso
+                          </div>
+                        </div>
+
+                        <div className="mt-2 h-2.5 w-full rounded-full bg-black/10 overflow-hidden relative">
+                          {/* Relleno */}
+                          <motion.div
+                            className="h-full rounded-full"
+                            style={{
+                              background:
+                                'linear-gradient(90deg, rgba(193,255,114,0.95), rgba(193,255,114,0.55))'
+                            }}
+                            variants={progressBar}
+                            initial="hidden"
+                            whileInView="show"
+                            viewport={{ once: true, amount: 0.35 }}
+                          />
+
+                          {/* Scan line (micro animación) */}
+                          <motion.div
+                            aria-hidden="true"
+                            className="absolute top-0 h-full w-16 rounded-full opacity-35"
+                            style={{
+                              background:
+                                'linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent)'
+                            }}
+                            animate={{ x: ['-20%', '120%'] }}
+                            transition={{
+                              duration: 1.8,
+                              repeat: Infinity,
+                              ease: 'easeInOut'
+                            }}
+                          />
+                        </div>
+
+                        <div className="mt-2 text-[11px] font-semibold text-black/55">
+                          Avanzamos con relevamiento y definición de propuesta.
+                          Te contactamos dentro de 24–48h.
+                        </div>
+                      </div>
+                    </motion.div>
                   </div>
-                </div>
+                </ResultsPanelMotion>
               </motion.div>
             </motion.div>
           </div>
