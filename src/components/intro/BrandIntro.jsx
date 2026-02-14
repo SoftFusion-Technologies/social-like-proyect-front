@@ -177,6 +177,12 @@ export default function BrandIntro({
     transition: { duration: exitMs / 1000, ease: 'easeOut' }
   };
 
+  const claimWords = useMemo(() => {
+    return String(claim || '')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+  }, [claim]);
   return (
     <AnimatePresence
       onExitComplete={() => {
@@ -211,35 +217,36 @@ export default function BrandIntro({
                   <motion.h1
                     key="claim"
                     {...claimWrap}
+                    className="font-display tracking-tight leading-[1.05]
+             text-[color:var(--intro-ink)]
+             text-5xl sm:text-5xl lg:text-6xl"
                     variants={containerVariants}
                     initial="hidden"
                     animate="show"
-                    className="
-    font-display tracking-tight text-[color:var(--intro-ink)] select-none text-center
-    leading-[1.05]
-    whitespace-normal break-normal
-    text-[42px] sm:text-5xl lg:text-6xl
-  "
-                    style={{
-                      // importante: NO balance acá porque corta feo con letter-by-letter
-                      // si querés clamp, que sea alto para no “achicar de más”
-                      fontSize: undefined
-                    }}
                   >
-                    {letters.map((ch, idx) => {
-                      const isSpace = ch === ' ';
-                      return (
-                        <motion.span
-                          key={`lt-${idx}`}
-                          variants={letterVariants}
-                          className={
-                            isSpace ? 'inline-block w-[0.34em]' : 'inline-block'
-                          }
-                        >
-                          {isSpace ? '\u00A0' : ch}
-                        </motion.span>
-                      );
-                    })}
+                    {claimWords.map((word, wIdx) => (
+                      <React.Fragment key={`w-${wIdx}`}>
+                        {/* Palabra: NO se puede cortar entre letras */}
+                        <span className="inline-block whitespace-nowrap">
+                          {Array.from(word).map((ch, lIdx) => (
+                            <motion.span
+                              key={`lt-${wIdx}-${lIdx}`}
+                              variants={letterVariants}
+                              className="inline-block"
+                            >
+                              {ch}
+                            </motion.span>
+                          ))}
+                        </span>
+
+                        {/* Espacio: acá sí permitimos corte de línea */}
+                        {wIdx !== claimWords.length - 1 && (
+                          <span className="inline-block w-[0.35em]">
+                            {'\u00A0'}
+                          </span>
+                        )}
+                      </React.Fragment>
+                    ))}
                   </motion.h1>
                 ) : (
                   <motion.div
