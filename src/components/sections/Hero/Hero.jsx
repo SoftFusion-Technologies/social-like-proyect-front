@@ -334,7 +334,7 @@ export default function Hero() {
               >
                 Hacé que tu Negocio se vea{' '}
                 <RotatingSelectableWord
-                  startDelayMs={2000}
+                  startDelayMs={1000}
                   words={[
                     'Profesional',
                     'Moderno',

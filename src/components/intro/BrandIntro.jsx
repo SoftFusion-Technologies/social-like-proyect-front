@@ -65,23 +65,45 @@ export default function BrandIntro({
     []
   );
 
+  const [pal, setPal] = useState({
+    lima: '#c1ff72',
+    naranja: '#fff6ef',
+    negro: '#000000',
+    gris: '#b4b4b4',
+    grisClaro: '#d9d9d9',
+    amarillo: '#fffef0'
+  });
+
+  useEffect(() => {
+    // Lee variables reales del :root cuando el CSS ya está aplicado
+    const root = document.documentElement;
+    const cs = getComputedStyle(root);
+
+    const read = (name, fallback) => {
+      const v = cs.getPropertyValue(name)?.trim();
+      return v && v.length ? v : fallback;
+    };
+
+    setPal({
+      lima: read('--color-sl-lima', '#c1ff72'),
+      naranja: read('--color-sl-naranja', '#fff6ef'),
+      negro: read('--color-sl-negro', '#000000'),
+      gris: read('--color-sl-gris', '#b4b4b4'),
+      grisClaro: read('--color-sl-gris-claro', '#d9d9d9'),
+      amarillo: read('--color-sl-amarillo', '#fffef0')
+    });
+  }, []);
+
   const cycleColors = useMemo(() => {
     if (tone === 'negro') return null;
-    if (!brandColorCycle) return null;
 
-    // Default: lila -> lima -> negro -> lima -> lila
-    const fallback = [lilaHex, SL.lima, SL.negro, SL.lima, lilaHex];
-
-    if (Array.isArray(brandColors) && brandColors.length >= 2)
-      return brandColors;
-    return fallback;
-  }, [tone, brandColorCycle, brandColors, lilaHex, SL]);
+    // lila -> lima -> amarillo -> negro -> lima -> lila
+    return [lilaHex, pal.lima, pal.amarillo, pal.negro, pal.lima, lilaHex];
+  }, [tone, lilaHex, pal]);
 
   const cycleTimes = useMemo(() => {
     if (!cycleColors) return null;
     const n = cycleColors.length;
-    if (n === 1) return [0];
-    // distribuye 0..1 (0, 0.25, 0.5, 0.75, 1) según n
     return Array.from({ length: n }, (_, i) => i / (n - 1));
   }, [cycleColors]);
 
@@ -256,24 +278,25 @@ export default function BrandIntro({
                                text-3xl sm:text-4xl lg:text-5xl"
                   >
                     <motion.span
+                      key={`brand-cycle-${pal.lima}-${pal.amarillo}`} // fuerza re-init cuando la paleta se resuelve
                       className="tracking-[0.28em]"
-                      initial={false}
+                      initial={{ color: lilaHex }}
                       animate={
-                        tone === 'negro' || !cycleColors
-                          ? { color: 'var(--intro-ink)' }
-                          : { color: cycleColors }
+                        cycleColors
+                          ? { color: cycleColors }
+                          : { color: 'var(--intro-ink)' }
                       }
                       transition={
-                        tone === 'negro' || !cycleColors
-                          ? { duration: 0.01 }
-                          : {
+                        cycleColors
+                          ? {
                               duration: Math.max(
                                 0.2,
                                 (brandHoldMs - 120) / 1000
-                              ), // deja ~120ms final estable
+                              ),
                               times: cycleTimes,
                               ease: 'easeInOut'
                             }
+                          : { duration: 0.01 }
                       }
                     >
                       {brand}
