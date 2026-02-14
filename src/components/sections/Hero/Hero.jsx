@@ -340,7 +340,6 @@ export default function Hero() {
                     'Moderno',
                     'Confiable',
                     'Memorable',
-                    'Eficaz'
                   ]} // o 3 palabras si preferís
                   selectMs={820}
                   deselectMs={760}

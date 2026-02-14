@@ -53,53 +53,19 @@ export default function BrandIntro({
 
   const letters = useMemo(() => Array.from(claim), [claim]);
 
-  const SL = useMemo(
-    () => ({
-      lima: '#c1ff72',
-      naranja: '#fff6ef',
-      negro: '#000000',
-      gris: '#b4b4b4',
-      grisClaro: '#d9d9d9',
-      amarillo: '#fffef0'
-    }),
-    []
-  );
-
-  const [pal, setPal] = useState({
-    lima: '#c1ff72',
-    naranja: '#fff6ef',
-    negro: '#000000',
-    gris: '#b4b4b4',
-    grisClaro: '#d9d9d9',
-    amarillo: '#fffef0'
-  });
-
-  useEffect(() => {
-    // Lee variables reales del :root cuando el CSS ya está aplicado
-    const root = document.documentElement;
-    const cs = getComputedStyle(root);
-
-    const read = (name, fallback) => {
-      const v = cs.getPropertyValue(name)?.trim();
-      return v && v.length ? v : fallback;
-    };
-
-    setPal({
-      lima: read('--color-sl-lima', '#c1ff72'),
-      naranja: read('--color-sl-naranja', '#fff6ef'),
-      negro: read('--color-sl-negro', '#000000'),
-      gris: read('--color-sl-gris', '#b4b4b4'),
-      grisClaro: read('--color-sl-gris-claro', '#d9d9d9'),
-      amarillo: read('--color-sl-amarillo', '#fffef0')
-    });
-  }, []);
-
+  // Benjamin Orellana - 14/02/2026 - Ciclo de colores fijo (hex) para evitar fallas en deploy (Netlify)
   const cycleColors = useMemo(() => {
     if (tone === 'negro') return null;
 
-    // lila -> lima -> amarillo -> negro -> lima -> lila
-    return [lilaHex, pal.lima, pal.amarillo, pal.negro, pal.lima, lilaHex];
-  }, [tone, lilaHex, pal]);
+    return [
+      '#8B5CF6', // lila
+      '#73ba16', // verde
+      '#e01919', // rojo
+      '#000000', // negro
+      '#2206d7', // azul
+      '#8B5CF6' // vuelve a lila
+    ];
+  }, [tone]);
 
   const cycleTimes = useMemo(() => {
     if (!cycleColors) return null;
@@ -278,9 +244,10 @@ export default function BrandIntro({
                                text-3xl sm:text-4xl lg:text-5xl"
                   >
                     <motion.span
-                      key={`brand-cycle-${pal.lima}-${pal.amarillo}`} // fuerza re-init cuando la paleta se resuelve
                       className="tracking-[0.28em]"
-                      initial={{ color: lilaHex }}
+                      initial={{
+                        color: cycleColors?.[0] ?? 'var(--intro-ink)'
+                      }}
                       animate={
                         cycleColors
                           ? { color: cycleColors }
