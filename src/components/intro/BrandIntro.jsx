@@ -224,7 +224,7 @@ export default function BrandIntro({
                     {...claimWrap}
                     className="font-display tracking-tight leading-[1.05]
                                text-[color:var(--intro-ink)]
-                               text-4xl sm:text-5xl lg:text-6xl"
+                               text-3xl sm:text-5xl lg:text-6xl"
                     variants={containerVariants}
                     initial="hidden"
                     animate="show"

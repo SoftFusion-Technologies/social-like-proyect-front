@@ -19,7 +19,7 @@ export default function Home() {
         open={introOpen}
         onDone={() => setIntroOpen(false)}
         tone="lila"
-        lilaHex="#8B5CF6"
+        lilaHex="#73ba16"
         brandHoldMs={1600}
         exitMs={650}
         brandColorCycle={true}
