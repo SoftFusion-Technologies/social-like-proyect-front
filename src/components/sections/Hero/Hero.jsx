@@ -12,7 +12,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiArrowUpRight, FiPlay, FiCheck } from 'react-icons/fi';
-
+import RotatingSelectableWord from '../../ui/RotatingSelectableWord';
 const fadeUp = {
   hidden: { opacity: 0, y: 14, filter: 'blur(6px)' },
   show: (i = 0) => ({
@@ -327,25 +327,32 @@ export default function Hero() {
                   <ValueChip key={c}>{c}</ValueChip>
                 ))}
               </motion.div>
-
               <motion.h1
                 custom={1}
                 variants={fadeUp}
                 className="font-display text-[40px] leading-[1.05] sm:text-[52px] md:text-[60px] tracking-tight text-sl-negro"
               >
                 Hacé que tu Negocio se vea{' '}
-                <span
-                  style={{
-                    background:
-                      'linear-gradient(90deg, var(--color-sl-lima))',
-                    WebkitBackgroundClip: 'text',
-                    backgroundClip: 'text',
-                    color: 'transparent'
-                  }}
-                >
-                  Profesional
-                </span>{' '}
-                y transforme visitas en{' '}
+                <RotatingSelectableWord
+                  startDelayMs={2000}
+                  words={[
+                    'Profesional',
+                    'Moderno',
+                    'Confiable',
+                    'Memorable',
+                    'Eficaz'
+                  ]} // o 3 palabras si preferís
+                  selectMs={820}
+                  deselectMs={760}
+                  swapMs={260}
+                  afterSwapGapMs={140}
+                  stepHoldFrac={0.72}
+                  highlightColor="var(--color-sl-lima)"
+                  inkColorSelected="var(--color-sl-negro)"
+                  baseGradient="linear-gradient(90deg, var(--color-sl-lima), var(--color-sl-lima))"
+                  className="font-extrabold"
+                />
+                {' '} y transforme visitas en{' '}
                 <span className="underline decoration-black/15 underline-offset-4">
                   Clientes.
                 </span>
