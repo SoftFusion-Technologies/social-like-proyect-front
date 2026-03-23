@@ -177,7 +177,7 @@ function PlanCard({ plan, featured = false }) {
         ))}
       </div>
 
-      <Price>{plan.price}</Price>
+      {/* <Price>{plan.price}</Price> */}
 
       <div className="relative mt-6 grid gap-2">
         {plan.features.map((f) => (
